@@ -7,10 +7,27 @@ class TestLeafNode(unittest.TestCase):
     def test_generic_node(self):
         tag: str = "p"
         text: str = "I'm a text"
-        node: LeafNode = LeafNode(tag=tag, value=text)
+        empty: str = ""
 
-        self.assertEqual(f"{node}", f"LeafNode({tag}, {text}, None)")
+        node: LeafNode = LeafNode(tag=tag, value=text)
+        self.assertEqual(node.__repr__(), f"LeafNode({tag}, {text}, None)")
         self.assertEqual(node.to_html(), f"<{tag}>{text}</{tag}>")
+
+        node_without_tag: LeafNode = LeafNode(tag=empty, value=text)
+        self.assertEqual(
+            node_without_tag.__repr__(), f"LeafNode({empty}, {text}, None)"
+        )
+        self.assertEqual(node_without_tag.to_html(), text)
+
+    def test_faulty_nodes(self):
+        tag: str = "p"
+        empty: str = ""
+
+        node_without_value: LeafNode = LeafNode(tag=tag, value=empty)
+        self.assertEqual(
+            node_without_value.__repr__(), f"LeafNode({tag}, {empty}, None)"
+        )
+        self.assertRaises(ValueError, node_without_value.to_html)
 
     def test_node_with_props(self):
         tag: str = "p"
