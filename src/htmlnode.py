@@ -31,5 +31,17 @@ class HTMLNode:
         return result
 
     @override
+    def __eq__(self, other: object, /) -> bool:
+        if not isinstance(other, HTMLNode):
+            return False
+
+        return (self.tag, self.value, self.children, self.props) == (
+            other.tag,
+            other.value,
+            other.children,
+            other.props,
+        )
+
+    @override
     def __repr__(self) -> str:
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
