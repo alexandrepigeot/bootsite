@@ -15,9 +15,6 @@ class LeafNode(HTMLNode):
 
     @override
     def to_html(self) -> str:
-        if self.value == "":
-            raise ValueError("Empty value")
-
         if self.value == None:
             raise ValueError("Tag can't be None")
 
