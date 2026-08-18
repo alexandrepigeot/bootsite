@@ -7,7 +7,7 @@ from src.leafnode import LeafNode
 
 
 class TextType(Enum):
-    PLAIN = "plain"
+    TEXT = "text"
     BOLD = "bold"
     ITALIC = "italic"
     CODE = "code"
@@ -38,7 +38,7 @@ class TextNode:
 
     def to_leaf_node(self) -> LeafNode:
         match self.text_type:
-            case TextType.PLAIN:
+            case TextType.TEXT:
                 return LeafNode(tag="", value=self.text)
             case TextType.BOLD:
                 return LeafNode(tag="b", value=self.text)

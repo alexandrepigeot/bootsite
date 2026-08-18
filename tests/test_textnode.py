@@ -6,10 +6,10 @@ from src.textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
     def test_plain_node(self) -> None:
-        node1 = TextNode("This is a text node", TextType.PLAIN)
-        node2 = TextNode("This is a text node", TextType.PLAIN)
+        node1 = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a text node", TextType.TEXT)
 
-        self.assertEqual("TextNode(This is a text node, plain, None)", node1.__repr__())
+        self.assertEqual("TextNode(This is a text node, text, None)", node1.__repr__())
         self.assertEqual(node1, node2)
         self.assertEqual(
             LeafNode(tag="", value="This is a text node"), node1.to_leaf_node()
@@ -95,23 +95,23 @@ class TestTextNode(unittest.TestCase):
         )
 
     def test_text_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.PLAIN)
-        node2 = TextNode("This one has a different text", TextType.PLAIN)
+        node1 = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This one has a different text", TextType.TEXT)
         self.assertNotEqual(node1, node2)
 
     def test_text_type_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.PLAIN)
+        node1 = TextNode("This is a text node", TextType.TEXT)
         node2 = TextNode("This is a text node", TextType.BOLD)
         self.assertNotEqual(node1, node2)
 
     def test_url_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.PLAIN, "http://boot.dev")
-        node2 = TextNode("This is a text node", TextType.PLAIN, "http://localhost")
+        node1 = TextNode("This is a text node", TextType.TEXT, "http://boot.dev")
+        node2 = TextNode("This is a text node", TextType.TEXT, "http://localhost")
         self.assertNotEqual(node1, node2)
 
     def test_default_url(self):
-        node1 = TextNode("This is a text node", TextType.PLAIN)
-        node2 = TextNode("This is a text node", TextType.PLAIN, None)
+        node1 = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a text node", TextType.TEXT, None)
         self.assertEqual(node1, node2)
 
 
