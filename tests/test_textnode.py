@@ -4,71 +4,63 @@ from src.textnode import TextNode, TextType
 
 
 class TestTextNode(unittest.TestCase):
-    def test_plain_eq(self):
+    def test_plain_node(self) -> None:
         node1 = TextNode("This is a text node", TextType.PLAIN)
         node2 = TextNode("This is a text node", TextType.PLAIN)
+
+        self.assertEqual("TextNode(This is a text node, plain, None)", node1.__repr__())
         self.assertEqual(node1, node2)
 
-    def test_plain_repr(self):
-        node = TextNode("This is a text node", TextType.PLAIN)
-        text = "TextNode(This is a text node, plain, None)"
-        self.assertEqual(f"{node}", text)
-
-    def test_bold_eq(self):
+    def test_bold_node(self):
         node1 = TextNode("This is a bold text node", TextType.BOLD)
         node2 = TextNode("This is a bold text node", TextType.BOLD)
+
+        self.assertEqual(
+            "TextNode(This is a bold text node, bold, None)", node1.__repr__()
+        )
         self.assertEqual(node1, node2)
 
-    def test_bold_repr(self):
-        node = TextNode("This is a bold text node", TextType.BOLD)
-        text = "TextNode(This is a bold text node, bold, None)"
-        self.assertEqual(f"{node}", text)
-
-    def test_italic_eq(self):
+    def test_italic_node(self):
         node1 = TextNode("This is an italic text node", TextType.ITALIC)
         node2 = TextNode("This is an italic text node", TextType.ITALIC)
+
+        self.assertEqual(
+            "TextNode(This is an italic text node, italic, None)", node1.__repr__()
+        )
         self.assertEqual(node1, node2)
 
-    def test_italic_repr(self):
-        node = TextNode("This is an italic text node", TextType.ITALIC)
-        text = "TextNode(This is an italic text node, italic, None)"
-        self.assertEqual(f"{node}", text)
-
-    def test_code_eq(self):
+    def test_code_node(self):
         node1 = TextNode("This is a code text node", TextType.CODE)
         node2 = TextNode("This is a code text node", TextType.CODE)
+
+        self.assertEqual(
+            "TextNode(This is a code text node, code, None)", node1.__repr__()
+        )
         self.assertEqual(node1, node2)
 
-    def test_code_repr(self):
-        node = TextNode("This is a code text node", TextType.CODE)
-        text = "TextNode(This is a code text node, code, None)"
-        self.assertEqual(f"{node}", text)
-
-    def test_link_eq(self):
+    def test_link_node(self):
         node1 = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
         node2 = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
+
+        self.assertEqual(
+            "TextNode(This is a link text node, link, http://boot.dev)",
+            node1.__repr__(),
+        )
         self.assertEqual(node1, node2)
 
-    def test_link_repr(self):
-        node = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
-        text = "TextNode(This is a link text node, link, http://boot.dev)"
-        self.assertEqual(f"{node}", text)
-
-    def test_image_eq(self):
+    def test_image_node(self):
         node1 = TextNode(
             "This is an image text node", TextType.IMAGE, "http://boot.dev/image.png"
         )
         node2 = TextNode(
             "This is an image text node", TextType.IMAGE, "http://boot.dev/image.png"
         )
-        self.assertEqual(node1, node2)
 
-    def test_image_repr(self):
-        node = TextNode(
-            "This is an image text node", TextType.IMAGE, "http://boot.dev/image.png"
+        self.assertEqual(
+            "TextNode(This is an image text node, image, http://boot.dev/image.png)",
+            node1.__repr__(),
         )
-        text = "TextNode(This is an image text node, image, http://boot.dev/image.png)"
-        self.assertEqual(f"{node}", text)
+        self.assertEqual(node1, node2)
 
     def test_text_not_eq(self):
         node1 = TextNode("This is a text node", TextType.PLAIN)
