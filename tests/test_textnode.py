@@ -1,5 +1,6 @@
 import unittest
 
+from src.leafnode import LeafNode
 from src.textnode import TextNode, TextType
 
 
@@ -10,6 +11,9 @@ class TestTextNode(unittest.TestCase):
 
         self.assertEqual("TextNode(This is a text node, plain, None)", node1.__repr__())
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(tag="", value="This is a text node"), node1.to_leaf_node()
+        )
 
     def test_bold_node(self):
         node1 = TextNode("This is a bold text node", TextType.BOLD)
@@ -19,6 +23,9 @@ class TestTextNode(unittest.TestCase):
             "TextNode(This is a bold text node, bold, None)", node1.__repr__()
         )
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(tag="b", value="This is a bold text node"), node1.to_leaf_node()
+        )
 
     def test_italic_node(self):
         node1 = TextNode("This is an italic text node", TextType.ITALIC)
@@ -28,6 +35,9 @@ class TestTextNode(unittest.TestCase):
             "TextNode(This is an italic text node, italic, None)", node1.__repr__()
         )
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(tag="i", value="This is an italic text node"), node1.to_leaf_node()
+        )
 
     def test_code_node(self):
         node1 = TextNode("This is a code text node", TextType.CODE)
@@ -37,6 +47,9 @@ class TestTextNode(unittest.TestCase):
             "TextNode(This is a code text node, code, None)", node1.__repr__()
         )
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(tag="code", value="This is a code text node"), node1.to_leaf_node()
+        )
 
     def test_link_node(self):
         node1 = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
@@ -47,6 +60,14 @@ class TestTextNode(unittest.TestCase):
             node1.__repr__(),
         )
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(
+                tag="a",
+                value="This is a link text node",
+                props={"href": "http://boot.dev"},
+            ),
+            node1.to_leaf_node(),
+        )
 
     def test_image_node(self):
         node1 = TextNode(
@@ -61,6 +82,17 @@ class TestTextNode(unittest.TestCase):
             node1.__repr__(),
         )
         self.assertEqual(node1, node2)
+        self.assertEqual(
+            LeafNode(
+                tag="img",
+                value="",
+                props={
+                    "alt": "This is an image text node",
+                    "src": "http://boot.dev/image.png",
+                },
+            ),
+            node1.to_leaf_node(),
+        )
 
     def test_text_not_eq(self):
         node1 = TextNode("This is a text node", TextType.PLAIN)
