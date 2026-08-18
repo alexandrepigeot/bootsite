@@ -18,9 +18,6 @@ class ParentNode(HTMLNode):
         if self.tag == "":
             raise ValueError("Empty tag")
 
-        if self.children == []:
-            raise ValueError("Empty children")
-
         if self.children is None:
             raise ValueError("Children can't be None")
 
