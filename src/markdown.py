@@ -1,66 +1,33 @@
 from __future__ import annotations
 
 import re
-from typing import override
 
+from src.image import Image
+from src.link import Link
 from src.textnode import TextNode, TextType
 
 IMAGE_PATTERN: str = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
 LINK_PATTERN: str = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
 
 
-class ImageNode:
-    def __init__(self, alt: str, src: str) -> None:
-        self.alt: str = alt
-        self.src: str = src
-
-    @override
-    def __eq__(self, other: object, /) -> bool:
-        if not isinstance(other, ImageNode):
-            return False
-
-        return (self.alt, self.src) == (other.alt, other.src)
-
-    @override
-    def __repr__(self) -> str:
-        return f"ImageNode({self.alt}, {self.src})"
-
-
-class LinkNode:
-    def __init__(self, text: str, url: str) -> None:
-        self.text: str = text
-        self.url: str = url
-
-    @override
-    def __eq__(self, other: object, /) -> bool:
-        if not isinstance(other, LinkNode):
-            return False
-
-        return (self.text, self.url) == (other.text, other.url)
-
-    @override
-    def __repr__(self) -> str:
-        return f"LinkNode({self.text}, {self.url})"
-
-
-def extract_images(text: str) -> list[ImageNode]:
+def extract_images(text: str) -> list[Image]:
     matches: list[(str)] = re.findall(IMAGE_PATTERN, text)
 
-    result: list[ImageNode] = []
+    result: list[Image] = []
 
     for match in matches:
-        result.append(ImageNode(match[0], match[1]))
+        result.append(Image(match[0], match[1]))
 
     return result
 
 
-def extract_links(text: str) -> list[LinkNode]:
+def extract_links(text: str) -> list[Link]:
     matches: list[(str)] = re.findall(LINK_PATTERN, text)
 
-    result: list[LinkNode] = []
+    result: list[Link] = []
 
     for match in matches:
-        result.append(LinkNode(match[0], match[1]))
+        result.append(Link(match[0], match[1]))
 
     return result
 
@@ -109,5 +76,37 @@ def split_nodes(
                     text_type,
                 )
             )
+
+    return new_nodes
+
+
+def split_images(old_nodes: list[TextNode]) -> list[TextNode]:
+    # forloop the nodes in old_nodes
+    #
+    new_nodes: list[TextNode] = []
+
+    for node in old_nodes:
+        images = extract_images(node.text)
+
+        if len(images) == 0:
+            new_nodes.append(node)
+            continue
+
+        remaining_text = node.text
+
+        for image in images:
+            split_text = remaining_text.split(image.to_markdown(), maxsplit=1)
+
+            if split_text[0] != "":
+                new_nodes.append(TextNode(text=split_text[0], text_type=TextType.TEXT))
+
+            new_nodes.append(
+                TextNode(text=image.alt, text_type=TextType.IMAGE, url=image.url)
+            )
+
+            remaining_text = split_text[1]
+
+        if remaining_text != "":
+            new_nodes.append(TextNode(text=remaining_text, text_type=TextType.TEXT))
 
     return new_nodes
