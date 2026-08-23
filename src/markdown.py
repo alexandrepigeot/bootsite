@@ -142,3 +142,12 @@ def split_links(old_nodes: list[TextNode]) -> list[TextNode]:
             new_nodes.append(TextNode(remaining_text, TextType.TEXT))
 
     return new_nodes
+
+
+def text_to_text_nodes(text: str) -> list[TextNode]:
+    nodes = [TextNode(text, TextType.TEXT)]
+    nodes = split_nodes(nodes, "**", TextType.BOLD)
+    nodes = split_nodes(nodes, "`", TextType.CODE)
+    nodes = split_nodes(nodes, "_", TextType.ITALIC)
+    nodes = split_images(nodes)
+    return split_links(nodes)

@@ -8,6 +8,7 @@ from src.markdown import (
     split_images,
     split_links,
     split_nodes,
+    text_to_text_nodes,
 )
 from src.textnode import TextNode, TextType
 
@@ -143,6 +144,26 @@ class TestMarkdown(unittest.TestCase):
             ],
             split_links(nodes),
         )
+
+    def test_text_to_text_nodes(self) -> None:
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+
+        nodes = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode(
+                "obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"
+            ),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+
+        self.assertEqual(nodes, text_to_text_nodes(text))
 
 
 if __name__ == "__main__":
