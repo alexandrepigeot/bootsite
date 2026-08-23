@@ -151,3 +151,16 @@ def text_to_text_nodes(text: str) -> list[TextNode]:
     nodes = split_nodes(nodes, "_", TextType.ITALIC)
     nodes = split_images(nodes)
     return split_links(nodes)
+
+def markdown_to_blocks(text: str) -> list[str]:
+    raw_blocks = text.split("\n\n")
+
+    stripped_blocks: list[str] = []
+
+    for block in raw_blocks:
+        stripped_block = block.strip()
+
+        if stripped_block != "":
+            stripped_blocks.append(stripped_block)
+
+    return stripped_blocks

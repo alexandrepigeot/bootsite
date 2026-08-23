@@ -5,6 +5,7 @@ from src.link import Link
 from src.markdown import (
     extract_images,
     extract_links,
+    markdown_to_blocks,
     split_images,
     split_links,
     split_nodes,
@@ -164,6 +165,21 @@ class TestMarkdown(unittest.TestCase):
         ]
 
         self.assertEqual(nodes, text_to_text_nodes(text))
+
+    def test_markdown_to_blocks(self) -> None:
+        text = """# This is a heading
+
+This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
+
+- This is the first list item in a list block
+- This is a list item
+- This is another list item"""
+
+        self.assertEqual([
+            "# This is a heading",
+            "This is a paragraph of text. It has some **bold** and _italic_ words inside of it.",
+            "- This is the first list item in a list block\n- This is a list item\n- This is another list item"
+        ], markdown_to_blocks(text))
 
 
 if __name__ == "__main__":
