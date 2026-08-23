@@ -2,7 +2,13 @@ import unittest
 
 from src.image import Image
 from src.link import Link
-from src.markdown import extract_images, extract_links, split_images, split_nodes
+from src.markdown import (
+    extract_images,
+    extract_links,
+    split_images,
+    split_links,
+    split_nodes,
+)
 from src.textnode import TextNode, TextType
 
 
@@ -103,6 +109,39 @@ class TestMarkdown(unittest.TestCase):
                 TextNode("image3", TextType.IMAGE, "source3"),
             ],
             split_images(nodes),
+        )
+
+    def test_split_link(self) -> None:
+        nodes = [
+            TextNode(text="This is a [link](href) for sure", text_type=TextType.TEXT)
+        ]
+
+        self.assertEqual(
+            [
+                TextNode("This is a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, url="href"),
+                TextNode(" for sure", TextType.TEXT),
+            ],
+            split_links(nodes),
+        )
+
+    def test_complex_split_links(self) -> None:
+        nodes = [
+            TextNode(
+                text="[link1](href1) something [link2](href2) something [link3](href3)",
+                text_type=TextType.TEXT,
+            )
+        ]
+
+        self.assertEqual(
+            [
+                TextNode("link1", TextType.LINK, "href1"),
+                TextNode(" something ", TextType.TEXT),
+                TextNode("link2", TextType.LINK, "href2"),
+                TextNode(" something ", TextType.TEXT),
+                TextNode("link3", TextType.LINK, "href3"),
+            ],
+            split_links(nodes),
         )
 
 

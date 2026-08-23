@@ -81,11 +81,13 @@ def split_nodes(
 
 
 def split_images(old_nodes: list[TextNode]) -> list[TextNode]:
-    # forloop the nodes in old_nodes
-    #
     new_nodes: list[TextNode] = []
 
     for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
         images = extract_images(node.text)
 
         if len(images) == 0:
@@ -98,15 +100,45 @@ def split_images(old_nodes: list[TextNode]) -> list[TextNode]:
             split_text = remaining_text.split(image.to_markdown(), maxsplit=1)
 
             if split_text[0] != "":
-                new_nodes.append(TextNode(text=split_text[0], text_type=TextType.TEXT))
+                new_nodes.append(TextNode(split_text[0], TextType.TEXT))
 
-            new_nodes.append(
-                TextNode(text=image.alt, text_type=TextType.IMAGE, url=image.url)
-            )
+            new_nodes.append(TextNode(image.alt, TextType.IMAGE, image.url))
 
             remaining_text = split_text[1]
 
         if remaining_text != "":
-            new_nodes.append(TextNode(text=remaining_text, text_type=TextType.TEXT))
+            new_nodes.append(TextNode(remaining_text, TextType.TEXT))
+
+    return new_nodes
+
+
+def split_links(old_nodes: list[TextNode]) -> list[TextNode]:
+    new_nodes: list[TextNode] = []
+
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+
+        links = extract_links(node.text)
+
+        if len(links) == 0:
+            new_nodes.append(node)
+            continue
+
+        remaining_text = node.text
+
+        for link in links:
+            split_text = remaining_text.split(link.to_markdown(), maxsplit=1)
+
+            if split_text[0] != "":
+                new_nodes.append(TextNode(split_text[0], TextType.TEXT))
+
+            new_nodes.append(TextNode(link.text, TextType.LINK, link.url))
+
+            remaining_text = split_text[1]
+
+        if remaining_text != "":
+            new_nodes.append(TextNode(remaining_text, TextType.TEXT))
 
     return new_nodes
