@@ -10,10 +10,6 @@ class ParentNode(HTMLNode):
         super().__init__(tag=tag, value=None, children=children, props=props)
 
     @override
-    def __repr__(self) -> str:
-        return f"ParentNode({self.tag}, {self.children}, {self.props})"
-
-    @override
     def to_html(self) -> str:
         if self.tag == "":
             raise ValueError("Empty tag")

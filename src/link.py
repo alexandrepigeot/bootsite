@@ -1,4 +1,7 @@
+import re
 from typing import override
+
+LINK_PATTERN: str = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
 
 
 class Link:
@@ -15,7 +18,18 @@ class Link:
 
     @override
     def __repr__(self) -> str:
-        return f"LinkNode({self.text}, {self.url})"
+        return f"Link({self.text, self.url})"
 
     def to_markdown(self) -> str:
         return f"[{self.text}]({self.url})"
+
+
+def extract_links(text: str) -> list[Link]:
+    matches: list[(str)] = re.findall(LINK_PATTERN, text)
+
+    links: list[Link] = []
+
+    for match in matches:
+        links.append(Link(match[0], match[1]))
+
+    return links

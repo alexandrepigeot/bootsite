@@ -4,43 +4,29 @@ from src.leafnode import LeafNode
 
 
 class TestLeafNode(unittest.TestCase):
-    def test_text_node(self) -> None:
-        node: LeafNode = LeafNode(tag="", value="This is a text")
+    def test_eq(self) -> None:
+        node1 = LeafNode(tag="tag", value="value", props={"prop": "attribute"})
+        node2 = LeafNode(tag="tag", value="value", props={"prop": "attribute"})
 
-        self.assertEqual("LeafNode(, This is a text, None)", node.__repr__())
-        self.assertEqual("This is a text", node.to_html())
+        self.assertEqual(node1, node2)
 
-    def test_p_node(self) -> None:
-        node: LeafNode = LeafNode(tag="p", value="This is a paragraph")
+    def test_to_html(self) -> None:
+        node = LeafNode(tag="tag", value="value")
+        expected_html = "<tag>value</tag>"
 
-        self.assertEqual("LeafNode(p, This is a paragraph, None)", node.__repr__())
-        self.assertEqual("<p>This is a paragraph</p>", node.to_html())
+        self.assertEqual(node.to_html(), expected_html)
 
-    def test_a_node(self) -> None:
-        node: LeafNode = LeafNode(
-            tag="a", value="This is a link", props={"href": "http://boot.dev"}
-        )
+    def test_to_html_with_props(self) -> None:
+        node = LeafNode(tag="tag", value="value", props={"prop": "attribute"})
+        expected_html = '<tag prop="attribute">value</tag>'
 
-        self.assertEqual(
-            "LeafNode(a, This is a link, {'href': 'http://boot.dev'})", node.__repr__()
-        )
-        self.assertEqual('<a href="http://boot.dev">This is a link</a>', node.to_html())
+        self.assertEqual(node.to_html(), expected_html)
 
-    def test_img_node(self) -> None:
-        node: LeafNode = LeafNode(
-            tag="img",
-            value="",
-            props={"src": "http://boot.dev", "alt": "This is alternate text"},
-        )
+    def test_to_html_without_tag(self) -> None:
+        node = LeafNode(tag="", value="value")
+        expected_html = "value"
 
-        self.assertEqual(
-            "LeafNode(img, , {'src': 'http://boot.dev', 'alt': 'This is alternate text'})",
-            node.__repr__(),
-        )
-        self.assertEqual(
-            '<img src="http://boot.dev" alt="This is alternate text"></img>',
-            node.to_html(),
-        )
+        self.assertEqual(node.to_html(), expected_html)
 
 
 if __name__ == "__main__":

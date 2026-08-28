@@ -5,114 +5,73 @@ from src.textnode import TextNode, TextType
 
 
 class TestTextNode(unittest.TestCase):
-    def test_plain_node(self) -> None:
-        node1 = TextNode("This is a text node", TextType.TEXT)
-        node2 = TextNode("This is a text node", TextType.TEXT)
+    def test_eq(self) -> None:
+        node1 = TextNode("text", TextType.TEXT)
+        node2 = TextNode("text", TextType.TEXT)
 
-        self.assertEqual("TextNode(This is a text node, text, None)", node1.__repr__())
         self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(tag="", value="This is a text node"), node1.to_leaf_node()
-        )
 
-    def test_bold_node(self):
-        node1 = TextNode("This is a bold text node", TextType.BOLD)
-        node2 = TextNode("This is a bold text node", TextType.BOLD)
+    def test_eq_full(self) -> None:
+        node1 = TextNode("text", TextType.TEXT, "url")
+        node2 = TextNode("text", TextType.TEXT, "url")
 
-        self.assertEqual(
-            "TextNode(This is a bold text node, bold, None)", node1.__repr__()
-        )
         self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(tag="b", value="This is a bold text node"), node1.to_leaf_node()
-        )
 
-    def test_italic_node(self):
-        node1 = TextNode("This is an italic text node", TextType.ITALIC)
-        node2 = TextNode("This is an italic text node", TextType.ITALIC)
+    def test_eq_different_text(self) -> None:
+        node1 = TextNode("text", TextType.TEXT, "url")
+        node2 = TextNode("different text", TextType.TEXT, "url")
 
-        self.assertEqual(
-            "TextNode(This is an italic text node, italic, None)", node1.__repr__()
-        )
-        self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(tag="i", value="This is an italic text node"), node1.to_leaf_node()
-        )
-
-    def test_code_node(self):
-        node1 = TextNode("This is a code text node", TextType.CODE)
-        node2 = TextNode("This is a code text node", TextType.CODE)
-
-        self.assertEqual(
-            "TextNode(This is a code text node, code, None)", node1.__repr__()
-        )
-        self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(tag="code", value="This is a code text node"), node1.to_leaf_node()
-        )
-
-    def test_link_node(self):
-        node1 = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
-        node2 = TextNode("This is a link text node", TextType.LINK, "http://boot.dev")
-
-        self.assertEqual(
-            "TextNode(This is a link text node, link, http://boot.dev)",
-            node1.__repr__(),
-        )
-        self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(
-                tag="a",
-                value="This is a link text node",
-                props={"href": "http://boot.dev"},
-            ),
-            node1.to_leaf_node(),
-        )
-
-    def test_image_node(self):
-        node1 = TextNode(
-            "This is an image text node", TextType.IMAGE, "http://boot.dev/image.png"
-        )
-        node2 = TextNode(
-            "This is an image text node", TextType.IMAGE, "http://boot.dev/image.png"
-        )
-
-        self.assertEqual(
-            "TextNode(This is an image text node, image, http://boot.dev/image.png)",
-            node1.__repr__(),
-        )
-        self.assertEqual(node1, node2)
-        self.assertEqual(
-            LeafNode(
-                tag="img",
-                value="",
-                props={
-                    "alt": "This is an image text node",
-                    "src": "http://boot.dev/image.png",
-                },
-            ),
-            node1.to_leaf_node(),
-        )
-
-    def test_text_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.TEXT)
-        node2 = TextNode("This one has a different text", TextType.TEXT)
         self.assertNotEqual(node1, node2)
 
-    def test_text_type_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.TEXT)
-        node2 = TextNode("This is a text node", TextType.BOLD)
+    def test_eq_different_type(self) -> None:
+        node1 = TextNode("text", TextType.TEXT, "url")
+        node2 = TextNode("text", TextType.BOLD, "url")
+
         self.assertNotEqual(node1, node2)
 
-    def test_url_not_eq(self):
-        node1 = TextNode("This is a text node", TextType.TEXT, "http://boot.dev")
-        node2 = TextNode("This is a text node", TextType.TEXT, "http://localhost")
+    def test_eq_different_url(self) -> None:
+        node1 = TextNode("text", TextType.TEXT, "url")
+        node2 = TextNode("text", TextType.TEXT, "different url")
+
         self.assertNotEqual(node1, node2)
 
-    def test_default_url(self):
-        node1 = TextNode("This is a text node", TextType.TEXT)
-        node2 = TextNode("This is a text node", TextType.TEXT, None)
-        self.assertEqual(node1, node2)
+    def test_to_leaf_node_text(self) -> None:
+        node = TextNode("text", TextType.TEXT)
+        expected_node = LeafNode(tag="", value="text")
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
+
+    def test_to_leaf_node_bold(self) -> None:
+        node = TextNode("text", TextType.BOLD)
+        expected_node = LeafNode(tag="b", value="text")
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
+
+    def test_to_leaf_node_italic(self) -> None:
+        node = TextNode("text", TextType.ITALIC)
+        expected_node = LeafNode(tag="i", value="text")
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
+
+    def test_to_leaf_node_code(self) -> None:
+        node = TextNode("text", TextType.CODE)
+        expected_node = LeafNode(tag="code", value="text")
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
+
+    def test_to_leaf_node_link(self) -> None:
+        node = TextNode("text", TextType.LINK, "url")
+        expected_node = LeafNode(tag="a", value="text", props={"href": "url"})
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
+
+    def test_to_leaf_node_image(self) -> None:
+        node = TextNode("text", TextType.IMAGE, "url")
+        expected_node = LeafNode(
+            tag="img", value="", props={"alt": "text", "src": "url"}
+        )
+
+        self.assertEqual(node.to_leaf_node(), expected_node)
 
 
 if __name__ == "__main__":

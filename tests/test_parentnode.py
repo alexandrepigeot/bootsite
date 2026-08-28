@@ -5,63 +5,48 @@ from src.parentnode import ParentNode
 
 
 class TestParentNode(unittest.TestCase):
-    def test_parent_node(self) -> None:
-        node: ParentNode = ParentNode(tag="div", children=[])
-
-        self.assertEqual("ParentNode(div, [], None)", node.__repr__())
-        self.assertEqual("<div></div>", node.to_html())
-        self.assertEqual("", node.props_to_html())
-
-    def test_parent_of_parents_node(self) -> None:
-        node: ParentNode = ParentNode(
-            tag="div",
-            children=[
-                ParentNode(tag="div", children=[]),
-                ParentNode(tag="div", children=[]),
-            ],
+    def test_eq(self) -> None:
+        node1 = ParentNode(
+            tag="tag",
+            children=[LeafNode(tag="tag", value="value")],
+            props={"prop": "attribute"},
+        )
+        node2 = ParentNode(
+            tag="tag",
+            children=[LeafNode(tag="tag", value="value")],
+            props={"prop": "attribute"},
         )
 
-        self.assertEqual(
-            "ParentNode(div, [ParentNode(div, [], None), ParentNode(div, [], None)], None)",
-            node.__repr__(),
-        )
-        self.assertEqual("<div><div></div><div></div></div>", node.to_html())
-        self.assertEqual("", node.props_to_html())
+        self.assertEqual(node1, node2)
 
-    def test_parent_of_leaves_node(self) -> None:
-        node: ParentNode = ParentNode(
-            tag="div",
-            children=[
-                LeafNode(tag="p", value="This is a paragraph"),
-                LeafNode(tag="p", value="This is a paragraph"),
-            ],
-        )
+    def test_to_html(self) -> None:
+        node = ParentNode(tag="tag", children=[LeafNode(tag="childtag", value="value")])
+        expected_html = "<tag><childtag>value</childtag></tag>"
 
-        self.assertEqual(
-            "ParentNode(div, [LeafNode(p, This is a paragraph, None), LeafNode(p, This is a paragraph, None)], None)",
-            node.__repr__(),
-        )
-        self.assertEqual(
-            "<div><p>This is a paragraph</p><p>This is a paragraph</p></div>",
-            node.to_html(),
-        )
-        self.assertEqual("", node.props_to_html())
+        self.assertEqual(node.to_html(), expected_html)
 
-    def test_parent_with_props(self) -> None:
-        node: ParentNode = ParentNode(
-            tag="div", children=[], props={"key": "attribute"}
+    def test_to_html_with_props(self) -> None:
+        node = ParentNode(
+            tag="tag",
+            children=[LeafNode(tag="childtag", value="value", props={"prop": "attribute"})],
+            props={"prop": "attribute"},
+        )
+        expected_html = (
+            '<tag prop="attribute"><childtag prop="attribute">value</childtag></tag>'
         )
 
-        self.assertEqual("ParentNode(div, [], {'key': 'attribute'})", node.__repr__())
-        self.assertEqual('<div key="attribute"></div>', node.to_html())
-        self.assertEqual(' key="attribute"', node.props_to_html())
+        self.assertEqual(node.to_html(), expected_html)
 
-    def test_empty_tag(self) -> None:
-        node: ParentNode = ParentNode(tag="", children=[])
+    def test_to_html_empty_children(self) -> None:
+        node = ParentNode(tag="tag", children=[])
+        expected_html = "<tag></tag>"
 
-        self.assertEqual("ParentNode(, [], None)", node.__repr__())
+        self.assertEqual(node.to_html(), expected_html)
+
+    def test_to_html_empty_tag(self) -> None:
+        node = ParentNode(tag="", children=[LeafNode(tag="childtag", value="value")])
+
         self.assertRaises(ValueError, node.to_html)
-        self.assertEqual("", node.props_to_html())
 
 
 if __name__ == "__main__":

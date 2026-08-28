@@ -1,4 +1,7 @@
+import re
 from typing import override
+
+IMAGE_PATTERN: str = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
 
 
 class Image:
@@ -15,7 +18,18 @@ class Image:
 
     @override
     def __repr__(self) -> str:
-        return f"ImageNode({self.alt}, {self.url})"
+        return f"Image({self.alt}, {self.url})"
 
     def to_markdown(self) -> str:
         return f"![{self.alt}]({self.url})"
+
+
+def extract_images(text: str) -> list[Image]:
+    matches: list[(str)] = re.findall(IMAGE_PATTERN, text)
+
+    images: list[Image] = []
+
+    for match in matches:
+        images.append(Image(match[0], match[1]))
+
+    return images

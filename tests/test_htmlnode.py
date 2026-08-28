@@ -4,61 +4,105 @@ from src.htmlnode import HTMLNode
 
 
 class TestHTMLNode(unittest.TestCase):
-    def test_div_node(self) -> None:
-        node: HTMLNode = HTMLNode(tag="div")
+    def test_eq_empty(self) -> None:
+        node1 = HTMLNode()
+        node2 = HTMLNode()
 
-        self.assertEqual("HTMLNode(div, None, None, None)", node.__repr__())
+        self.assertEqual(node1, node2)
+
+    def test_eq_full(self) -> None:
+        node1 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+        node2 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+
+        self.assertEqual(node1, node2)
+
+    def test_eq_different_tag(self) -> None:
+        node1 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+        node2 = HTMLNode(
+            tag="different tag",
+            value="value",
+            children=[HTMLNode()],
+            props={"prop": "attribute"},
+        )
+
+        self.assertNotEqual(node1, node2)
+
+    def test_eq_different_value(self) -> None:
+        node1 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+        node2 = HTMLNode(
+            tag="tag",
+            value="different value",
+            children=[HTMLNode()],
+            props={"prop": "attribute"},
+        )
+
+        self.assertNotEqual(node1, node2)
+
+    def test_eq_different_children(self) -> None:
+        node1 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+        node2 = HTMLNode(
+            tag="tag",
+            value="value",
+            children=[HTMLNode(tag="different tag")],
+            props={"prop": "attribute"},
+        )
+
+        self.assertNotEqual(node1, node2)
+
+    def test_eq_different_props(self) -> None:
+        node1 = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+        node2 = HTMLNode(
+            tag="tag",
+            value="value",
+            children=[HTMLNode()],
+            props={"prop": "different attribute"},
+        )
+
+        self.assertNotEqual(node1, node2)
+
+    def test_to_html_not_implemented(self) -> None:
+        node = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
+        )
+
         self.assertRaises(NotImplementedError, node.to_html)
-        self.assertEqual("", node.props_to_html())
 
-    def test_p_node(self) -> None:
-        node: HTMLNode = HTMLNode(tag="p", value="This is a paragraph")
-
-        self.assertEqual(
-            "HTMLNode(p, This is a paragraph, None, None)", node.__repr__()
+    def test_props_to_html(self) -> None:
+        node = HTMLNode(
+            tag="tag", value="value", children=[HTMLNode()], props={"prop": "attribute"}
         )
-        self.assertRaises(NotImplementedError, node.to_html)
-        self.assertEqual("", node.props_to_html())
+        expected_props = ' prop="attribute"'
 
-    def test_a_node(self) -> None:
-        node: HTMLNode = HTMLNode(
-            tag="a", value="This is a link", props={"href": "http://boot.dev"}
-        )
+        self.assertEqual(node.props_to_html(), expected_props)
 
-        self.assertEqual(
-            "HTMLNode(a, This is a link, None, {'href': 'http://boot.dev'})",
-            node.__repr__(),
-        )
-        self.assertRaises(NotImplementedError, node.to_html)
-        self.assertEqual(' href="http://boot.dev"', node.props_to_html())
+    def test_props_to_html_empty(self) -> None:
+        node = HTMLNode(tag="tag", value="value", children=[HTMLNode()])
+        expected_props = ""
 
-    def test_parent_div_node(self) -> None:
-        node: HTMLNode = HTMLNode(
-            tag="div",
-            children=[
-                HTMLNode(tag="p", value="This is a paragraph"),
-                HTMLNode(tag="p", value="This is a paragraph"),
-            ],
-        )
+        self.assertEqual(node.props_to_html(), expected_props)
 
-        self.assertEqual(
-            "HTMLNode(div, None, [HTMLNode(p, This is a paragraph, None, None), HTMLNode(p, This is a paragraph, None, None)], None)",
-            node.__repr__(),
+    def test_props_to_html_multiple(self) -> None:
+        node = HTMLNode(
+            tag="tag",
+            value="value",
+            children=[HTMLNode()],
+            props={"prop": "attribute", "other-prop": "other attribute"},
         )
-        self.assertRaises(NotImplementedError, node.to_html)
-        self.assertEqual("", node.props_to_html())
+        expected_props = ' prop="attribute" other-prop="other attribute"'
 
-    def test_img_node(self) -> None:
-        node: HTMLNode = HTMLNode(
-            tag="img", value="This is alternate text", props={"src": "http://boot.dev"}
-        )
-
-        self.assertEqual(
-            "HTMLNode(img, This is alternate text, None, {'src': 'http://boot.dev'})",
-            node.__repr__(),
-        )
-        self.assertRaises(NotImplementedError, node.to_html)
-        self.assertEqual(' src="http://boot.dev"', node.props_to_html())
+        self.assertEqual(node.props_to_html(), expected_props)
 
 
 if __name__ == "__main__":
