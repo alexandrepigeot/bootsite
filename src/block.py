@@ -77,21 +77,3 @@ def block_to_block_type(block: str) -> BlockType:
         return BlockType.ORDERED_LIST
 
     return BlockType.PARAGRAPH
-
-
-def markdown_to_blocks(markdown: str) -> list[Block]:
-    raw_blocks = markdown.split("\n\n")
-
-    blocks: list[Block] = []
-
-    for raw_block in raw_blocks:
-        stripped_block = raw_block.strip()
-
-        if stripped_block == "":
-            continue
-
-        type = block_to_block_type(stripped_block)
-
-        blocks.append(Block(stripped_block, type))
-
-    return blocks

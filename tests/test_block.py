@@ -1,6 +1,6 @@
 import unittest
 
-from src.block import Block, BlockType, block_to_block_type, markdown_to_blocks
+from src.block import Block, BlockType, block_to_block_type
 
 
 class TestBlock(unittest.TestCase):
@@ -58,74 +58,6 @@ This is code
         self.assertEqual(block_to_block_type(quote), BlockType.QUOTE)
         self.assertEqual(block_to_block_type(unordered_list), BlockType.UNORDERED_LIST)
         self.assertEqual(block_to_block_type(ordered_list), BlockType.ORDERED_LIST)
-
-    def test_markdown_to_blocks(self) -> None:
-        markdown = """
-This is a paragraph
-
-# This is a heading
-
-## This is a heading
-
-### This is a heading
-
-#### This is a heading
-
-##### This is a heading
-
-###### This is a heading
-
-```
-This is code
-```
-
-> This is a quote
-> This is a quote
-> This is a quote
-
-- This is a list
-- This is a list
-- This is a list
-
-1. This is a list
-2. This is a list
-3. This is a list
-"""
-        expected_blocks: list[Block] = [
-            Block("This is a paragraph", BlockType.PARAGRAPH),
-            Block("# This is a heading", BlockType.HEADING1),
-            Block("## This is a heading", BlockType.HEADING2),
-            Block("### This is a heading", BlockType.HEADING3),
-            Block("#### This is a heading", BlockType.HEADING4),
-            Block("##### This is a heading", BlockType.HEADING5),
-            Block("###### This is a heading", BlockType.HEADING6),
-            Block(
-                """```
-This is code
-```""",
-                BlockType.CODE,
-            ),
-            Block(
-                """> This is a quote
-> This is a quote
-> This is a quote""",
-                BlockType.QUOTE,
-            ),
-            Block(
-                """- This is a list
-- This is a list
-- This is a list""",
-                BlockType.UNORDERED_LIST,
-            ),
-            Block(
-                """1. This is a list
-2. This is a list
-3. This is a list""",
-                BlockType.ORDERED_LIST,
-            ),
-        ]
-
-        self.assertEqual(markdown_to_blocks(markdown), expected_blocks)
 
 
 if __name__ == "__main__":
