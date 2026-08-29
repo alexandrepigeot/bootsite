@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from image import extract_images
-from link import extract_links
-from textnode import TextNode, TextType
+from src.image import extract_images
+from src.link import extract_links
+from src.textnode import TextNode, TextType
 
 
 def split_text_nodes(

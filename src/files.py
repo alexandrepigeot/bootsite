@@ -1,19 +1,16 @@
 import os
 import shutil
 
-STATIC_DIR = "static"
-PUBLIC_DIR = "public"
 
+def files_move_static(static_dir: str, public_dir: str) -> None:
+    if os.path.exists(public_dir):
+        shutil.rmtree(public_dir)
+        print(f"Removed {public_dir}")
 
-def files_move_static() -> None:
-    if os.path.exists(PUBLIC_DIR):
-        shutil.rmtree(PUBLIC_DIR)
-        print(f"Removed {PUBLIC_DIR}")
+    os.mkdir(public_dir)
+    print(f"Created {public_dir}")
 
-    os.mkdir(PUBLIC_DIR)
-    print(f"Created {PUBLIC_DIR}")
-
-    copy_directory(STATIC_DIR, PUBLIC_DIR)
+    copy_directory(static_dir, public_dir)
 
 
 def copy_directory(source: str, destination: str) -> None:

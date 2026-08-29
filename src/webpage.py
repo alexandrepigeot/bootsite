@@ -1,7 +1,7 @@
 import os
 
-from block import BlockType
-from markdown import markdown_to_blocks, markdown_to_html_node
+from src.block import BlockType
+from src.markdown import markdown_to_blocks, markdown_to_html_node
 
 
 def extract_title(markdown: str) -> str:
@@ -24,7 +24,9 @@ def extract_title(markdown: str) -> str:
     return title
 
 
-def generate_pages(source_dir: str, destination_dir: str, template_file: str) -> None:
+def generate_pages(
+    source_dir: str, destination_dir: str, template_file: str, basepath: str
+) -> None:
     source_items = os.listdir(source_dir)
 
     print(f"Found {len(source_items)} items in {source_dir}")
@@ -38,6 +40,7 @@ def generate_pages(source_dir: str, destination_dir: str, template_file: str) ->
                 source_item_path,
                 os.path.join(destination_dir, source_item),
                 template_file,
+                basepath,
             )
 
         if os.path.isfile(source_item_path) and source_item[-3:] == ".md":
@@ -45,14 +48,12 @@ def generate_pages(source_dir: str, destination_dir: str, template_file: str) ->
 
             destination_file = f"{os.path.join(destination_dir, source_item)[:-2]}html"
 
-            generate_page(
-                source_item_path,
-                destination_file,
-                template_file,
-            )
+            generate_page(source_item_path, destination_file, template_file, basepath)
 
 
-def generate_page(source_file: str, destination_file: str, template_file: str) -> None:
+def generate_page(
+    source_file: str, destination_file: str, template_file: str, basepath: str
+) -> None:
     print(
         f"Generating page from {source_file} to {destination_file} using {template_file} as template."
     )
@@ -65,7 +66,12 @@ def generate_page(source_file: str, destination_file: str, template_file: str) -
 
     template = read_file(template_file)
 
-    webpage = template.replace("{{ Title }}", title).replace("{{ Content }}", html)
+    webpage = (
+        template.replace("{{ Title }}", title)
+        .replace("{{ Content }}", html)
+        .replace('href="/', f'href="{basepath}')
+        .replace('src="/', f'src="{basepath}')
+    )
 
     write_file(destination_file, webpage)
 
