@@ -24,6 +24,34 @@ def extract_title(markdown: str) -> str:
     return title
 
 
+def generate_pages(source_dir: str, destination_dir: str, template_file: str) -> None:
+    source_items = os.listdir(source_dir)
+
+    print(f"Found {len(source_items)} items in {source_dir}")
+
+    for source_item in source_items:
+        source_item_path = os.path.join(source_dir, source_item)
+
+        if os.path.isdir(source_item_path):
+            print(f"{source_item} is a directory. Opening now:")
+            generate_pages(
+                source_item_path,
+                os.path.join(destination_dir, source_item),
+                template_file,
+            )
+
+        if os.path.isfile(source_item_path) and source_item[-3:] == ".md":
+            print(f"{source_item} is a file. Copying to {destination_dir}")
+
+            destination_file = f"{os.path.join(destination_dir, source_item)[:-2]}html"
+
+            generate_page(
+                source_item_path,
+                destination_file,
+                template_file,
+            )
+
+
 def generate_page(source_file: str, destination_file: str, template_file: str) -> None:
     print(
         f"Generating page from {source_file} to {destination_file} using {template_file} as template."
@@ -54,6 +82,7 @@ def read_file(file_path: str) -> str:
 
 def write_file(file_path: str, content: str) -> None:
     destination_dirs = os.path.dirname(file_path)
+
     os.makedirs(destination_dirs, exist_ok=True)
 
     with open(file_path, "w") as file:
