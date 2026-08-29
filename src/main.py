@@ -1,5 +1,3 @@
-from textnode import TextNode, TextType
+from files import files_move_static
 
-test = TextNode("Some text", TextType.PLAIN, "http://localhost")
-
-print(test)
+files_move_static()
