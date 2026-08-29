@@ -1,8 +1,8 @@
-from src.block import Block, BlockType, block_to_block_type
-from src.htmlnode import HTMLNode
-from src.leafnode import LeafNode
-from src.parentnode import ParentNode
-from src.split import split_text_to_text_nodes
+from block import Block, BlockType, block_to_block_type
+from htmlnode import HTMLNode
+from leafnode import LeafNode
+from parentnode import ParentNode
+from split import split_text_to_text_nodes
 
 
 def markdown_to_blocks(markdown: str) -> list[Block]:

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from src.image import extract_images
-from src.link import extract_links
-from src.textnode import TextNode, TextType
+from image import extract_images
+from link import extract_links
+from textnode import TextNode, TextType
 
 
 def split_text_nodes(
@@ -37,10 +37,13 @@ def split_text_nodes(
 
         if split_text[2] != "":
             new_nodes.extend(
-                split_text_nodes([TextNode(split_text[2], TextType.TEXT)], delimiter, type)
+                split_text_nodes(
+                    [TextNode(split_text[2], TextType.TEXT)], delimiter, type
+                )
             )
 
     return new_nodes
+
 
 def split_images(old_nodes: list[TextNode]) -> list[TextNode]:
     new_nodes: list[TextNode] = []

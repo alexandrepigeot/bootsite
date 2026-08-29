@@ -3,7 +3,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import override
 
-from src.leafnode import LeafNode
+from leafnode import LeafNode
 
 
 class TextType(Enum):
